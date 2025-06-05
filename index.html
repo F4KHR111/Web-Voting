@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voting Online</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 flex items-center gap-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/4511/4511897.png" alt="Logo" class="h-8 w-8" />
+    <h1 class="text-xl font-bold">Aplikasi Voting</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow flex justify-center items-center p-6">
+    <form id="votingForm" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md space-y-4" novalidate>
+      <h2 class="text-2xl font-semibold mb-4 text-center">Form Voting</h2>
+
+      <!-- Nama -->
+      <div>
+        <label for="nama" class="block mb-1 font-medium">Nama Lengkap</label>
+        <input type="text" id="nama" name="nama" required class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Nomor HP -->
+      <div>
+        <label for="nomorHp" class="block mb-1 font-medium">Nomor HP (awal 08, minimal 9 digit)</label>
+        <input type="tel" id="nomorHp" name="nomorHp" pattern="08[0-9]{7,}" title="Nomor harus diawali 08 dan minimal 9 digit" required class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Instansi -->
+      <div>
+        <label for="instansi" class="block mb-1 font-medium">Instansi</label>
+        <input type="text" id="instansi" name="instansi" required class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Nominasi -->
+      <div>
+        <label class="block mb-1 font-medium">Pilihan Nominasi</label>
+        <select id="nominasi" name="nominasi" required class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="">-- Pilih Nominasi --</option>
+          <option value="Nominasi 1">Nominasi 1</option>
+          <option value="Nominasi 2">Nominasi 2</option>
+          <option value="Nominasi 3">Nominasi 3</option>
+          <option value="Nominasi 4">Nominasi 4</option>
+          <option value="Nominasi 5">Nominasi 5</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
+        Kirim Voting
+      </button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white p-4 text-center">
+    &copy; 2025 Aplikasi Voting. All rights reserved.
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const form = document.getElementById('votingForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = {
+        nama: form.nama.value.trim(),
+        nomorHp: form.nomorHp.value.trim(),
+        instansi: form.instansi.value.trim(),
+        nominasi: form.nominasi.value,
+      };
+
+    // Ganti URL dibawah ini dengan URL Web App Google Apps Script milik Anda
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzrirj05aukEkRvf-_chxhFBBwEAYE5n7EvADNZX-rqkud1Nt7n247in91o8DeTSgBCyw/exec';
+
+    try {
+     const response = await fetch(webAppUrl, {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(data),
+    });
+
+        const text = await response.text();
+
+        if (text === 'Success') {
+          alert('Voting berhasil dikirim! Terima kasih sudah berpartisipasi.');
+          form.reset();
+        } else {
+          alert('Terjadi kesalahan saat mengirim data: ' + text);
+        }
+      } catch (error) {
+        alert('Gagal mengirim data: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
